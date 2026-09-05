@@ -3,11 +3,50 @@ import Layout from '../layouts/Layout.astro';
 ---
 
 <Layout title="memovee — the computer that remembers you">
-  <div class="flex flex-1 flex-col items-center justify-center gap-6 px-6 text-center">
+  <div class="flex flex-1 flex-col items-center justify-center gap-8 px-6 text-center">
+    <p id="eye" aria-hidden="true" class="select-none font-mono text-4xl text-base-content/80 sm:text-5xl">
+      <span id="face">ʘ‿ʘ</span>
+    </p>
     <h1 class="text-7xl font-mono font-bold tracking-tighter">memovee</h1>
     <p class="text-xl text-base-content/70">the computer that remembers you</p>
     <p class="badge badge-outline badge-sm gap-2 font-mono text-base-content/60">
       coming soon to an omarchy near you
     </p>
   </div>
+
+  <script>
+    const eye = document.getElementById('eye');
+    const face = document.getElementById('face');
+    if (eye && face && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      let targetX = 0;
+      let targetY = 0;
+      let x = 0;
+      let y = 0;
+      let lastMove = 0;
+
+      window.addEventListener('mousemove', (e) => {
+        const r = eye.getBoundingClientRect();
+        const dx = e.clientX - (r.left + r.width / 2);
+        const dy = e.clientY - (r.top + r.height / 2);
+        const len = Math.hypot(dx, dy) || 1;
+        const pull = Math.min(1, len / (r.width * 1.5));
+        targetX = (dx / len) * pull;
+        targetY = (dy / len) * pull;
+        lastMove = performance.now();
+      });
+
+      const tick = (now) => {
+        const r = eye.getBoundingClientRect();
+        const idle = !lastMove || now - lastMove > 2500;
+        const t = now / 1000;
+        const tx = idle ? Math.cos(t * 0.6) * 0.6 : targetX;
+        const ty = idle ? Math.sin(t * 0.9) * 0.6 : targetY;
+        x += (tx - x) * 0.12;
+        y += (ty - y) * 0.12;
+        face.style.transform = `translate(${x * r.width * 0.12}px, ${y * r.height * 0.25}px)`;
+        requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    }
+  </script>
 </Layout>
