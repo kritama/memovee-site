@@ -1,0 +1,45 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Memovee',
+  description = 'Memovee — built for developers.'
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <title>{title}</title>
+  </head>
+  <body class="min-h-screen bg-base-200 text-base-content">
+    <div class="navbar bg-base-100 border-b border-base-300">
+      <div class="container mx-auto flex-1 gap-4">
+        <a class="btn btn-ghost text-xl font-mono" href="/">memovee</a>
+        <div class="flex-none gap-2">
+          <a class="btn btn-ghost" href="/docs">Docs</a>
+          <a class="btn btn-ghost" href="/blog">Blog</a>
+          <a class="btn btn-primary btn-sm" href="#get-started">Get started</a>
+        </div>
+      </div>
+    </div>
+    <main class="container mx-auto py-10">
+      <slot />
+    </main>
+    <footer class="footer footer-center p-4 bg-base-100 border-t border-base-300">
+      <aside>
+        <p>Memovee — built with Astro, Tailwind CSS &amp; daisyUI. Deployed on Cloudflare Workers.</p>
+      </aside>
+    </footer>
+  </body>
+</html>
